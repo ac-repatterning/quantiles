@@ -43,9 +43,9 @@ class Persist:
 
         return nodes
 
-    def exc(self, metrics: cudf.DataFrame, partition: pr.Partitions) -> str:
+    def exc(self, disaggregates: cudf.DataFrame, partition: pr.Partitions) -> str:
 
-        metrics = metrics.copy().rename(columns={'min': 'minimum', 'max': 'maximum'})
+        metrics = disaggregates.copy().rename(columns={'min': 'minimum', 'max': 'maximum'})
         frame = metrics.reset_index(drop=False)
 
         # Ascertain date order
