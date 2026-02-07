@@ -1,4 +1,4 @@
-"""Module quantiles.py"""
+"""Module metrics.py"""
 
 import cudf
 import numpy as np
@@ -8,7 +8,7 @@ import src.algorithms.persist
 import src.elements.partitions as prt
 
 
-class Quantiles:
+class Metrics:
     """
     Calculates daily quantiles per gauge
     """
@@ -20,21 +20,21 @@ class Quantiles:
     @staticmethod
     def __get_aggregates(data: cudf.DataFrame):
 
-        __metrics = data['measure'].quantile(q = [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95])
-        metrics = __metrics.to_dict()
+        values = data['measure'].quantile(q = [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95])
+        aggregates = values.to_dict()
 
         sequence = data['measure'].to_numpy()
         i_minimum = np.nanargmin(sequence)
         i_maximum = np.nanargmax(sequence)
 
-        metrics.update({
+        aggregates.update({
             'minimum': float(data['measure'].values[i_minimum]),
             'minimum_': float(data['timestamp'].values[i_minimum]),
             'maximum': float(data['measure'].values[i_maximum]),
             'maximum_': float(data['timestamp'].values[i_maximum])
         })
 
-        return metrics
+        return aggregates
 
     def exc(self, data: cudf.DataFrame, partition: prt.Partitions) -> dict:
         """
