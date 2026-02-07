@@ -7,7 +7,7 @@ import pandas as pd
 import src.algorithms.data
 import src.algorithms.metrics
 import src.algorithms.persist
-import src.elements.partitions as pr
+import src.elements.partition as prt
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.s3.prefix
@@ -31,7 +31,7 @@ class Interface:
         self.__s3_parameters = s3_parameters
         self.__arguments = arguments
 
-    def exc(self, partitions: list[pr.Partitions], reference: pd.DataFrame):
+    def exc(self, partitions: list[prt.Partition], reference: pd.DataFrame):
         """
 
         :param partitions: The time series partitions.
