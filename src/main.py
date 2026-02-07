@@ -19,10 +19,10 @@ def main():
     # The time series partitions, the reference sheet of gauges
     partitions, reference = src.assets.interface.Interface(
         service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
-    logger.info(partitions[:16])
+    logger.info(partitions[:2])
 
     src.algorithms.interface.Interface(
-       service=service, s3_parameters=s3_parameters, arguments=arguments).exc(partitions=partitions[:16], reference=reference)
+       service=service, s3_parameters=s3_parameters, arguments=arguments).exc(partitions=partitions[:2], reference=reference)
 
     # Transferring calculations to an Amazon S3 (Simple Storage Service) bucket
     # src.transfer.interface.Interface(
@@ -57,5 +57,7 @@ if __name__ == '__main__':
     service: sr.Service
     arguments: dict
     connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
+
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
     main()
