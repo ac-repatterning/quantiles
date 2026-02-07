@@ -29,9 +29,9 @@ class Metrics:
 
         aggregates.update({
             'minimum': float(data['measure'].values[i_minimum]),
-            'minimum_': float(data['timestamp'].values[i_minimum]),
+            't_minimum': float(data['timestamp'].values[i_minimum]),
             'maximum': float(data['measure'].values[i_maximum]),
-            'maximum_': float(data['timestamp'].values[i_maximum]),
+            't_maximum': float(data['timestamp'].values[i_maximum]),
             'ts_id': partition.ts_id,
             'catchment_id': partition.catchment_id
         })
