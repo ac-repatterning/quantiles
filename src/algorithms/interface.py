@@ -53,5 +53,11 @@ class Interface:
             __aggregates = __metrics(data=data, partition=partition)
             computations.append(__aggregates)
         aggregates = dask.compute(computations, scheduler='threads')[0]
-
         logging.info(aggregates)
+
+        frame = pd.DataFrame.from_dict(aggregates)
+        frame.rename(columns={
+            0.05: 'e_l_whisker', 0.10: 'l_whisker', 0.25: 'l_quartile', 0.5: 'median',
+            0.75: 'u_quartile', 0.9: 'u_whisker', 0.95: 'e_u_whisker'},
+            inplace=True)
+        logging.info(frame)
