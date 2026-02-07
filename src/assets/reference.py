@@ -26,7 +26,7 @@ class Reference:
         self.__stream = src.functions.streams.Streams()
 
         # Rename
-        self.__rename = {'from': 'starting', 'to': 'until', 'station_latitude': 'latitude',
+        self.__rename = {'from': 'starting', 'station_latitude': 'latitude',
                          'station_longitude': 'longitude'}
 
     def __get_reference(self):
@@ -37,7 +37,7 @@ class Reference:
 
         uri = self.__endpoint + 'assets.csv'
         usecols = ['station_id', 'station_name', 'catchment_id', 'catchment_name', 'ts_id', 'ts_name',
-                   'from', 'to', 'station_latitude', 'station_longitude', 'river_name']
+                   'from', 'station_latitude', 'station_longitude', 'river_name']
         text = txa.TextAttributes(uri=uri, header=0, usecols=usecols)
 
         return self.__stream.read(text=text)
