@@ -2,6 +2,10 @@
 
 import cudf
 import numpy as np
+import pandas as pd
+
+import src.algorithms.persist
+import src.elements.partitions as prt
 
 
 class Quantiles:
@@ -9,8 +13,9 @@ class Quantiles:
     Calculates daily quantiles per gauge
     """
 
-    def __init__(self):
-        pass
+    def __init__(self,  reference: pd.DataFrame):
+
+        self.__persist = src.algorithms.persist.Persist(reference=reference)
 
     @staticmethod
     def __get_aggregates(data: cudf.DataFrame):
@@ -31,10 +36,11 @@ class Quantiles:
 
         return metrics
 
-    def exc(self, data: cudf.DataFrame) -> cudf.DataFrame:
+    def exc(self, data: cudf.DataFrame, partition: prt.Partitions) -> dict:
         """
 
         :param data: A data frame consisting of fields ['date', 'timestamp', 'measure'] <b>only</b>.<br>
+        :param partition
         :return:
         """
 
@@ -45,8 +51,8 @@ class Quantiles:
         q090 = lambda z: z.quantile(0.90); q090.__name__ = 'u_whisker'
         frame = data[['date', 'measure']].groupby(by='date', as_index=True, axis=0).agg(
             [q010, q025, q050, q075, q090, 'min', 'max'])
+        self.__persist.exc(disaggregates=frame.loc[:, 'measure'], partition=partition)
 
         aggregates = self.__get_aggregates(data=data)
-        print(aggregates)
 
-        return frame.loc[:, 'measure']
+        return aggregates
