@@ -5,8 +5,8 @@ import dask
 import pandas as pd
 
 import src.algorithms.data
+import src.algorithms.metrics
 import src.algorithms.persist
-import src.algorithms.quantiles
 import src.elements.partitions as pr
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
@@ -42,14 +42,15 @@ class Interface:
         # Delayed tasks
         __data = dask.delayed(src.algorithms.data.Data(
             service=self.__service, s3_parameters=self.__s3_parameters, arguments=self.__arguments).exc)
-        __quantiles = dask.delayed(
-            src.algorithms.quantiles.Quantiles(reference=reference).exc)
-        __persist = dask.delayed(src.algorithms.persist.Persist(reference=reference).exc)
+        __metrics = dask.delayed(src.algorithms.metrics.Metrics(
+            reference=reference).exc)
+        __persist = dask.delayed(src.algorithms.persist.Persist(
+            reference=reference).exc)
 
         computations = []
         for partition in partitions:
             data = __data(partition=partition)
-            __aggregates = __quantiles(data=data, partition=partition)
+            __aggregates = __metrics(data=data, partition=partition)
             computations.append(__aggregates)
         aggregates = dask.compute(computations, scheduler='threads')[0]
 
