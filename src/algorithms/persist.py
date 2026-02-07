@@ -6,7 +6,7 @@ import cudf
 import pandas as pd
 
 import config
-import src.elements.partitions as pr
+import src.elements.partition as prt
 import src.functions.objects
 
 
@@ -43,7 +43,7 @@ class Persist:
 
         return nodes
 
-    def exc(self, disaggregates: cudf.DataFrame, partition: pr.Partitions) -> str:
+    def exc(self, disaggregates: cudf.DataFrame, partition: prt.Partition) -> str:
 
         metrics = disaggregates.copy().rename(columns={'min': 'minimum', 'max': 'maximum'})
         frame = metrics.reset_index(drop=False)
