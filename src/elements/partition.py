@@ -1,8 +1,8 @@
-"""Module partitions.py"""
+"""Module partition.py"""
 import typing
 
 
-class Partitions(typing.NamedTuple):
+class Partition(typing.NamedTuple):
     """
     The data type class ⇾ Partitions<br><br>
 
