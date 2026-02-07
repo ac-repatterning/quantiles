@@ -61,3 +61,6 @@ class Interface:
             0.75: 'u_quartile', 0.9: 'u_whisker', 0.95: 'e_u_whisker'},
             inplace=True)
         logging.info(frame)
+
+        details = frame.merge(reference, how='left', on=['catchment_id', 'ts_id'])
+        logging.info(details)
