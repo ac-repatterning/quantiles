@@ -18,7 +18,7 @@ class Metrics:
         self.__persist = src.algorithms.persist.Persist(reference=reference)
 
     @staticmethod
-    def __get_aggregates(data: cudf.DataFrame):
+    def __get_aggregates(data: cudf.DataFrame, partition: prt.Partitions):
 
         values = data['measure'].quantile(q = [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95])
         aggregates = values.to_dict()
@@ -31,7 +31,9 @@ class Metrics:
             'minimum': float(data['measure'].values[i_minimum]),
             'minimum_': float(data['timestamp'].values[i_minimum]),
             'maximum': float(data['measure'].values[i_maximum]),
-            'maximum_': float(data['timestamp'].values[i_maximum])
+            'maximum_': float(data['timestamp'].values[i_maximum]),
+            'ts_id': partition.ts_id,
+            'catchment_id': partition.catchment_id
         })
 
         return aggregates
@@ -53,6 +55,6 @@ class Metrics:
             [q010, q025, q050, q075, q090, 'min', 'max'])
         self.__persist.exc(disaggregates=frame.loc[:, 'measure'], partition=partition)
 
-        aggregates = self.__get_aggregates(data=data)
+        aggregates = self.__get_aggregates(data=data, partition=partition)
 
         return aggregates
