@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 import src.algorithms.persist
-import src.elements.partitions as prt
+import src.elements.partition as prt
 
 
 class Metrics:
@@ -18,7 +18,7 @@ class Metrics:
         self.__persist = src.algorithms.persist.Persist(reference=reference)
 
     @staticmethod
-    def __get_aggregates(data: cudf.DataFrame, partition: prt.Partitions):
+    def __get_aggregates(data: cudf.DataFrame, partition: prt.Partition):
 
         values = data['measure'].quantile(q = [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95])
         aggregates = values.to_dict()
@@ -38,7 +38,7 @@ class Metrics:
 
         return aggregates
 
-    def exc(self, data: cudf.DataFrame, partition: prt.Partitions) -> dict:
+    def exc(self, data: cudf.DataFrame, partition: prt.Partition) -> dict:
         """
 
         :param data: A data frame consisting of fields ['date', 'timestamp', 'measure'] <b>only</b>.<br>
