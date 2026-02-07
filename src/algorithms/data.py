@@ -2,7 +2,7 @@
 
 import cudf
 
-import src.elements.partitions as pr
+import src.elements.partition as prt
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.s3.prefix
@@ -32,7 +32,7 @@ class Data:
             service=self.__service,
             bucket_name=self.__bucket_name)
 
-    def exc(self, partition: pr.Partitions) -> cudf.DataFrame:
+    def exc(self, partition: prt.Partition) -> cudf.DataFrame:
         """
 
         OR
