@@ -55,4 +55,4 @@ class Data:
         block['date'] = block['datestr'].dt.strftime('%Y-%m-%d')
         block['date'] = cudf.to_datetime(block['date'])
 
-        return block[['date', 'measure']]
+        return block[['date', 'timestamp', 'measure']]
