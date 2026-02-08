@@ -44,7 +44,7 @@ class Interface:
 
     def __persist(self, aggregates: dict):
         """
-        
+
         :param aggregates:
         :return:
         """
@@ -82,3 +82,5 @@ class Interface:
             computations.append(__aggregates)
         aggregates = dask.compute(computations, scheduler='threads')[0]
         logging.info(aggregates)
+
+        self.__persist(aggregates=aggregates)
