@@ -34,7 +34,8 @@ class Metrics:
             't_maximum': float(data['timestamp'].values[i_maximum]),
             'ts_id': partition.ts_id,
             'catchment_id': partition.catchment_id,
-            'ending': data['timestamp'].max()
+            'p_starting': data['timestamp'].min(),
+            'p_ending': data['timestamp'].max()
         })
 
         return aggregates
