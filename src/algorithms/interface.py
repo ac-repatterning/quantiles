@@ -1,10 +1,9 @@
 """Module interface.py"""
-import logging
+import json
 import os
 
 import dask
 import pandas as pd
-import json
 
 import config
 import src.algorithms.data
@@ -13,8 +12,8 @@ import src.algorithms.persist
 import src.elements.partition as prt
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
-import src.s3.prefix
 import src.functions.objects
+import src.s3.prefix
 
 
 class Interface:
@@ -81,6 +80,5 @@ class Interface:
             __aggregates = __metrics(data=data, partition=partition)
             computations.append(__aggregates)
         aggregates = dask.compute(computations, scheduler='threads')[0]
-        logging.info(aggregates)
 
         self.__persist(aggregates=aggregates)
