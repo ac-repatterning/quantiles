@@ -21,7 +21,7 @@ def main():
         service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
 
     src.algorithms.interface.Interface(
-       service=service, s3_parameters=s3_parameters, reference=reference, arguments=arguments).exc(partitions=partitions[:5])
+       service=service, s3_parameters=s3_parameters, reference=reference, arguments=arguments).exc(partitions=partitions)
 
     # Transferring calculations to an Amazon S3 (Simple Storage Service) bucket
     src.transfer.interface.Interface(
