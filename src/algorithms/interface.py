@@ -57,7 +57,7 @@ class Interface:
         string = details.to_json(orient='index')
         nodes = json.loads(string)
         src.functions.objects.Objects().write(
-            nodes=nodes, path=os.path.join(config.Config().quantiles_, 'aggregates.json'))
+            nodes=nodes, path=os.path.join(config.Config().aggregates_, 'aggregates.json'))
 
     def exc(self, partitions: list[prt.Partition], ):
         """
