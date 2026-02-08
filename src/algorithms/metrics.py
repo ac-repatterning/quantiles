@@ -40,8 +40,10 @@ class Metrics:
 
         return aggregates
 
+    # pylint: disable=C3001,C0321
     def __get_disaggregates(self, data: cudf.DataFrame, partition: prt.Partition):
         """
+        https://pylint.readthedocs.io/en/latest/user_guide/messages/convention/unnecessary-lambda-assignment.html
 
         :param data:
         :param partition:
