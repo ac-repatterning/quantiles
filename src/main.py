@@ -22,7 +22,7 @@ def main():
     logger.info(partitions[:2])
 
     src.algorithms.interface.Interface(
-       service=service, s3_parameters=s3_parameters, arguments=arguments).exc(partitions=partitions[:2], reference=reference)
+       service=service, s3_parameters=s3_parameters, reference=reference, arguments=arguments).exc(partitions=partitions[:2])
 
     # Transferring calculations to an Amazon S3 (Simple Storage Service) bucket
     # src.transfer.interface.Interface(
