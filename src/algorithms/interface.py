@@ -1,9 +1,12 @@
 """Module interface.py"""
 import logging
+import os
 
 import dask
 import pandas as pd
+import json
 
+import config
 import src.algorithms.data
 import src.algorithms.metrics
 import src.algorithms.persist
@@ -11,6 +14,7 @@ import src.elements.partition as prt
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.s3.prefix
+import src.functions.objects
 
 
 class Interface:
@@ -39,12 +43,21 @@ class Interface:
             0.75: 'u_quartile', 0.9: 'u_whisker', 0.95: 'e_u_whisker'}
 
     def __persist(self, aggregates: dict):
+        """
+        
+        :param aggregates:
+        :return:
+        """
 
         frame = pd.DataFrame.from_dict(aggregates)
         frame.rename(columns=self.__rename, inplace=True)
         details = frame.merge(self.__reference, how='left', on=['catchment_id', 'ts_id'])
+        details.set_index(keys='ts_id', inplace=True)
 
-        logging.info(details)
+        string = details.to_json(orient='index')
+        nodes = json.loads(string)
+        src.functions.objects.Objects().write(
+            nodes=nodes, path=os.path.join(config.Config().quantiles_, 'aggregates.json'))
 
     def exc(self, partitions: list[prt.Partition], ):
         """
