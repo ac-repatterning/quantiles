@@ -1,4 +1,6 @@
 """Module persist.py"""
+import logging
+
 import json
 import os
 
@@ -24,7 +26,6 @@ class Persist:
         self.__reference = reference
 
         self.__configurations = config.Config()
-
         self.__objects = src.functions.objects.Objects()
 
     def __get_nodes(self, data: cudf.DataFrame, ts_id: int) -> dict:
@@ -43,7 +44,14 @@ class Persist:
 
         return nodes
 
-    def exc(self, disaggregates: cudf.DataFrame, partition: prt.Partition) -> str:
+    def exc(self, disaggregates: cudf.DataFrame, partition: prt.Partition, period: dict) -> str:
+        """
+
+        :param disaggregates: Each instance summarises a day's quantiles, and extrema
+        :param partition: Refer to src.elements.partition
+        :param period: The data's time span
+        :return:
+        """
 
         frame = disaggregates.copy().reset_index(drop=False)
 
@@ -53,6 +61,8 @@ class Persist:
 
         # The nodes
         nodes = self.__get_nodes(data=data, ts_id=partition.ts_id)
+        logging.info(period)
+        nodes.update(period)
 
         # Write
         message = self.__objects.write(
