@@ -18,6 +18,7 @@ class Config:
         self.quantiles_ = os.path.join(self.warehouse, 'quantiles')
         self.points_ = os.path.join(self.quantiles_, 'points')
         self.menu_ = os.path.join(self.quantiles_, 'menu')
+        self.aggregates_ = os.path.join(self.quantiles_, 'aggregates')
 
         # Keys
         self.s3_parameters_key = 's3_parameters.yaml'
