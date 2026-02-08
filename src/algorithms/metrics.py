@@ -40,11 +40,11 @@ class Metrics:
 
         return aggregates
 
-    def exc(self, data: cudf.DataFrame, partition: prt.Partition) -> dict:
+    def __get_disaggregates(self, data: cudf.DataFrame, partition: prt.Partition):
         """
 
-        :param data: A data frame consisting of fields ['date', 'timestamp', 'measure'] <b>only</b>.<br>
-        :param partition
+        :param data:
+        :param partition:
         :return:
         """
 
@@ -55,8 +55,20 @@ class Metrics:
         q090 = lambda z: z.quantile(0.90); q090.__name__ = 'u_whisker'
         frame = data[['date', 'measure']].groupby(by='date', as_index=True, axis=0).agg(
             [q010, q025, q050, q075, q090, 'min', 'max'])
-        self.__persist.exc(disaggregates=frame.loc[:, 'measure'], partition=partition)
 
-        aggregates = self.__get_aggregates(data=data, partition=partition)
+        period = {'p_starting': float(data['timestamp'].min()),
+                  'p_ending': float(data['timestamp'].max())}
 
-        return aggregates
+        self.__persist.exc(disaggregates=frame.loc[:, 'measure'], partition=partition, period=period)
+
+    def exc(self, data: cudf.DataFrame, partition: prt.Partition) -> dict:
+        """
+
+        :param data: A data frame consisting of fields ['date', 'timestamp', 'measure'] <b>only</b>.<br>
+        :param partition
+        :return:
+        """
+
+        self.__get_disaggregates(data=data, partition=partition)
+
+        return self.__get_aggregates(data=data, partition=partition)
