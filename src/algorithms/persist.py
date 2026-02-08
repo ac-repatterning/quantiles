@@ -1,0 +1,71 @@
+"""Module persist.py"""
+import logging
+
+import json
+import os
+
+import cudf
+import pandas as pd
+
+import config
+import src.elements.partition as prt
+import src.functions.objects
+
+
+class Persist:
+    """
+    Persist
+    """
+
+    def __init__(self, reference: pd.DataFrame):
+        """
+
+        :param reference: A reference of gauges, and their attributes.
+        """
+
+        self.__reference = reference
+
+        self.__configurations = config.Config()
+        self.__objects = src.functions.objects.Objects()
+
+    def __get_nodes(self, data: cudf.DataFrame, ts_id: int) -> dict:
+        """
+
+        :param data: Quantiles
+        :param ts_id: A time series identification code
+        :return:
+        """
+
+        attributes: pd.Series = self.__reference.loc[self.__reference['ts_id'] == ts_id, :].squeeze()
+
+        string = data.to_pandas().to_json(orient='split')
+        nodes = json.loads(string)
+        nodes.update(attributes.to_dict())
+
+        return nodes
+
+    def exc(self, disaggregates: cudf.DataFrame, partition: prt.Partition, period: dict) -> str:
+        """
+
+        :param disaggregates: Each instance summarises a day's quantiles, and extrema
+        :param partition: Refer to src.elements.partition
+        :param period: The data's time span
+        :return:
+        """
+
+        frame = disaggregates.copy().reset_index(drop=False)
+
+        # Ascertain date order
+        __data = frame.sort_values(by='date', ascending=True, ignore_index=True)
+        data = __data.rename(columns={'date': 'datestr', 'min': 'minimum', 'max': 'maximum'})
+
+        # The nodes
+        nodes = self.__get_nodes(data=data, ts_id=partition.ts_id)
+        logging.info(period)
+        nodes.update(period)
+
+        # Write
+        message = self.__objects.write(
+            nodes=nodes, path=os.path.join(self.__configurations.points_, f'{partition.ts_id}.json'))
+
+        return message
