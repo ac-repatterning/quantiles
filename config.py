@@ -23,7 +23,7 @@ class Config:
         # Keys
         self.s3_parameters_key = 's3_parameters.yaml'
         self.arguments_key = 'quantiles/arguments.json'
-        self.metadata_ = 'quantiles/external'
+        self.metadata = 'quantiles/external/metadata.json'
 
         # The prefix of the Amazon repository where the quantiles will be stored
         self.prefix = 'warehouse/quantiles'
