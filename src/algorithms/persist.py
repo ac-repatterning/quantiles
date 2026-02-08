@@ -45,11 +45,11 @@ class Persist:
 
     def exc(self, disaggregates: cudf.DataFrame, partition: prt.Partition) -> str:
 
-        metrics = disaggregates.copy().rename(columns={'date': 'datestr', 'min': 'minimum', 'max': 'maximum'})
-        frame = metrics.reset_index(drop=False)
+        frame = disaggregates.copy().reset_index(drop=False)
 
         # Ascertain date order
-        data = frame.sort_values(by='date', ascending=True, ignore_index=True)
+        __data = frame.sort_values(by='date', ascending=True, ignore_index=True)
+        data = __data.rename(columns={'date': 'datestr', 'min': 'minimum', 'max': 'maximum'})
 
         # The nodes
         nodes = self.__get_nodes(data=data, ts_id=partition.ts_id)
